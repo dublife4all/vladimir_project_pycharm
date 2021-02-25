@@ -105,7 +105,7 @@ def load_data():
     return df
 
 
-
+data = load_data()
 
 
 # df = load_data()
@@ -137,30 +137,30 @@ def get_data_by_code(df, code):
         print(data)
         print(labels1)
         print(labels2)
+        return data, labels1, labels2
     else:
-        # i = df.loc['С00-С96']
-        # df[lambda x: x['count'] > 15]
-        i = df[df['Код по МКБ-10 пересмотра'] == code].index[0]
-        data = np.array([[df['из них: девушки'][i], df['из них: юнош'][i]]]).astype(int)
-
-
-        labels1 = [df['Код по МКБ-10 пересмотра'][i]]
-
-        labels2 = ['м', 'ж']
+        # i = df[df['Код по МКБ-10 пересмотра'] == code].index[0]
+        # data = np.array([[df['из них: девушки'][i], df['из них: юнош'][i]]]).astype(int)
+        # labels1 = [df['Код по МКБ-10 пересмотра'][i]]
+        # labels2 = ['м', 'ж']
     # print(data)
     # print(labels1)
     # print(labels2)
 
+        data = df.loc[df['Код по МКБ-10 пересмотра'] == code, ['из них: девушки', 'из них: юнош']]
+        cols = ['девушки', 'юноши']
+        data.columns = cols
+        return data
 
         # a = np.array([[df['из них: девушки'][i], df['из них: юнош'][i]]]).astype(int)
 
 
 
     #     return df
-    return data, labels1, labels2
+    # return data, labels1, labels2
     # return i
 
-get_data_by_code(load_data()[0], code)
+get_data_by_code(data, code)
 
 # def graphics1(data):
 #     fig, ax = plt.pyplot.subplots()
