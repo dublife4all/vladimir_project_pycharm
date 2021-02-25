@@ -10,6 +10,8 @@ import pandas as pd
 import matplotlib as plt
 import matplotlib.pyplot
 
+code = 'С00-С96'
+# code = ''
 
 # plt = __import__("matplotlib.pyplot", globals(), locals(), [], 0)
 # plt=__import__("matplotlib.pyplot")
@@ -18,7 +20,7 @@ import matplotlib.pyplot
 # import matplotlib.cm
 
 
-def girls():
+def load_data():
     df = pd.read_excel('/Users/vladimir/Desktop/jupyter/in.xlsx', header=[0], nrows=212, skiprows=5, usecols='B:P',
                        index_col=False,
                        sheet_name='ф.12 т.2000, т.2001, т.2100')  # , usecols=[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15]
@@ -74,33 +76,91 @@ def girls():
     # data = [[], []]
     # data = np.empty((2, 2)).astype(int)
     # data = pd.DataFrame([[],[]])
+
+
+
+
+    # col_names = ['A', 'B']
+    # data = pd.DataFrame(columns=col_names)
+    #
+    # # arr[0, 1] = 'abc'
+    # labels1=[]
+    # labels2=[]
+    # for i in range(1, 10):
+    #     a = np.array([[df['из них: девушки'][i], df['из них: юнош'][i]]]).astype(int)
+    #     # if a == np.array([0,0]):
+    #     #     continue
+    #     data = np.append(data, a, axis = 0)
+    #     labels1.append(df['Код по МКБ-10 пересмотра'][i])
+    #     labels2.append('м')
+    #     labels2.append('ж')
+    # print(data)
+    # print(labels1)
+    # print(labels2)
+
+
+    #     return df
+
+    # return data, labels1, labels2
+    return df
+
+
+
+
+
+# df = load_data()
+# get_data_by_code(load_data()[0], code)
+
+def get_data_by_code(df, code):
+
+    labels1 = []
+    labels2 = []
     col_names = ['A', 'B']
     data = pd.DataFrame(columns=col_names)
 
-    # arr[0, 1] = 'abc'
-    labels1=[]
-    labels2=[]
-    for i in range(1, 10):
-        a = np.array([[df['из них: девушки'][i], df['из них: юнош'][i]]]).astype(int)
-        # if a == np.array([0,0]):
-        #     continue
-        data = np.append(data, a, axis = 0)
-        labels1.append(df['Код по МКБ-10 пересмотра'][i])
-        labels2.append('м')
-        labels2.append('ж')
-    print(data)
-    print(labels1)
-    print(labels2)
+    if code == '':
+
+        # col_names = ['A', 'B']
+        # data = pd.DataFrame(columns=col_names)
+
+        # arr[0, 1] = 'abc'
+        # labels1=[]
+        # labels2=[]
+        for i in range(1, 100):
+            a = np.array([[df['из них: девушки'][i], df['из них: юнош'][i]]]).astype(int)
+            # if a == np.array([0,0]):
+            #     continue
+            data = np.append(data, a, axis = 0)
+            labels1.append(df['Код по МКБ-10 пересмотра'][i])
+            labels2.append('м')
+            labels2.append('ж')
+        print(data)
+        print(labels1)
+        print(labels2)
+    else:
+        # i = df.loc['С00-С96']
+        # df[lambda x: x['count'] > 15]
+        i = df[df['Код по МКБ-10 пересмотра'] == code].index[0]
+        data = np.array([[df['из них: девушки'][i], df['из них: юнош'][i]]]).astype(int)
+
+
+        labels1 = [df['Код по МКБ-10 пересмотра'][i]]
+
+        labels2 = ['м', 'ж']
+    # print(data)
+    # print(labels1)
+    # print(labels2)
+
+
+        # a = np.array([[df['из них: девушки'][i], df['из них: юнош'][i]]]).astype(int)
+
 
 
     #     return df
     return data, labels1, labels2
+    # return i
 
-
-# girls()
-
-
-
+get_data_by_code(load_data()[0], code)
 
 # def graphics1(data):
 #     fig, ax = plt.pyplot.subplots()
@@ -117,7 +177,7 @@ def girls():
 # #     ax.pie.labels="common X"
 # #     ax.label("common Y")
 #
-# graphics1(girls())
+# graphics1(load_data())
 
 
 def graphics1(data, labels1, labels2):
@@ -141,7 +201,10 @@ def graphics1(data, labels1, labels2):
 #     ax.pie.labels="common X"
 #     ax.label("common Y")
 
-graphics1(girls()[0],girls()[1],girls()[2])
+graphics1(get_data_by_code()[0],get_data_by_code()[1],get_data_by_code()[2])
+
+# graphics1(data,labels1,labels2)
+
 
 fig, ax = plt.pyplot.subplots(figsize=(6, 3), subplot_kw=dict(aspect="equal"))
 
