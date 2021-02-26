@@ -105,8 +105,57 @@ def load_data():
     return df
 
 
-data = load_data()
 
+
+def get_data_by_code_2(df, code):
+    data = df.loc[df['Код по МКБ-10 пересмотра'] == code, ['Код по МКБ-10 пересмотра','из них: девушки', 'из них: юнош']]
+    cols = ['Код по МКБ-10 пересмотра', 'девушки', 'юноши']
+    data.columns = cols
+    # print(np.array(data.columns))
+    return data
+
+df = load_data()
+data = get_data_by_code_2(df, code)
+# print(data)
+
+def graphics1_2(data):
+    # i = df[df['Код по МКБ-10 пересмотра'] == code].index[0]
+    # print(np.array([data['Код по МКБ-10 пересмотра']][0]))
+    labels1 = np.array([data['Код по МКБ-10 пересмотра']])
+    # labels2 = np.array(data.columns)
+    labels2 = ['девушки', 'юноши']
+    # data = np.array(data['девушки', 'юноши'])
+    # data = data['девушки'], data['юноши']
+    data = np.array([[data.iloc[0]['девушки'], data.iloc[0]['юноши']]])
+
+    # mask = df['A'].values == 'foo'
+    # data = np.array([[data['из них: девушки'], data['из них: юнош']]])
+    print(data)
+    fig, ax = plt.pyplot.subplots()
+    offset = 0.4
+    #     data = np.array([[5, 10], [8, 15], [11, 9]])
+    cmap = plt.pyplot.get_cmap("tab20b")
+    b_colors = cmap(np.array([0, 8, 12]))
+    sm_colors = cmap(np.array([1, 2, 3, 9, 10, 11, 13, 14, 15]))
+    # labels1 = ['По всем заболеваниям']
+    # labels2 = ['юноши', 'девушки', 'юноши', 'девушки']
+    ax.pie(data.sum(axis=1), radius=1, colors=b_colors, wedgeprops=dict(width=offset, edgecolor='w'), labels=labels1)
+    ax.pie(data.flatten(), radius=1 - offset, colors=sm_colors, wedgeprops=dict(width=offset, edgecolor='w'),
+           labels=labels2, textprops=dict(color="w"))
+
+
+
+    fig.show()
+
+
+#     ax.pie.labels="common X"
+#     ax.label("common Y")
+
+# graphics1(get_data_by_code()[0],get_data_by_code()[1],get_data_by_code()[2])
+
+graphics1_2(data)
+
+data = load_data()
 
 # df = load_data()
 # get_data_by_code(load_data()[0], code)
@@ -139,28 +188,39 @@ def get_data_by_code(df, code):
         print(labels2)
         return data, labels1, labels2
     else:
-        # i = df[df['Код по МКБ-10 пересмотра'] == code].index[0]
-        # data = np.array([[df['из них: девушки'][i], df['из них: юнош'][i]]]).astype(int)
-        # labels1 = [df['Код по МКБ-10 пересмотра'][i]]
-        # labels2 = ['м', 'ж']
-    # print(data)
-    # print(labels1)
-    # print(labels2)
+        i = df[df['Код по МКБ-10 пересмотра'] == code].index[0]
+        data = np.array([[df['из них: девушки'][i], df['из них: юнош'][i]]]).astype(int)
+        labels1 = [df['Код по МКБ-10 пересмотра'][i]]
+        labels2 = ['м', 'ж']
+        print(data)
+        print(labels1)
+        print(labels2)
+        return data, labels1, labels2
 
-        data = df.loc[df['Код по МКБ-10 пересмотра'] == code, ['из них: девушки', 'из них: юнош']]
-        cols = ['девушки', 'юноши']
-        data.columns = cols
-        return data
+
+        # data = df.loc[df['Код по МКБ-10 пересмотра'] == code, ['из них: девушки', 'из них: юнош']]
+        # cols = ['девушки', 'юноши']
+        # data.columns = cols
+        # return data
+        #print(np.array(data.columns))
 
         # a = np.array([[df['из них: девушки'][i], df['из них: юнош'][i]]]).astype(int)
 
 
 
     #     return df
-    # return data, labels1, labels2
     # return i
 
 get_data_by_code(data, code)
+
+
+
+
+# a1 = get_data_by_code(data, code)[0]
+# a2 = get_data_by_code(data, code)[1]
+# a3 = get_data_by_code(data, code)[2]
+
+a1,a2,a3 = get_data_by_code(data, code)
 
 # def graphics1(data):
 #     fig, ax = plt.pyplot.subplots()
@@ -201,77 +261,83 @@ def graphics1(data, labels1, labels2):
 #     ax.pie.labels="common X"
 #     ax.label("common Y")
 
-graphics1(get_data_by_code()[0],get_data_by_code()[1],get_data_by_code()[2])
+# graphics1(get_data_by_code()[0],get_data_by_code()[1],get_data_by_code()[2])
+
+graphics1(a1,a2,a3)
+
+
+
+
 
 # graphics1(data,labels1,labels2)
 
 
-fig, ax = plt.pyplot.subplots(figsize=(6, 3), subplot_kw=dict(aspect="equal"))
-
-recipe = ["375 g flour",
-          "75 g sugar",
-          "250 g butter",
-          "300 g berries"]
-
-data = [float(x.split()[0]) for x in recipe]
-ingredients = [x.split()[-1] for x in recipe]
-
-
-def func(pct, allvals):
-    absolute = int(pct/100.*np.sum(allvals))
-    return "{:.1f}%\n({:d} g)".format(pct, absolute)
-
-
-wedges, texts, autotexts = ax.pie(data, autopct=lambda pct: func(pct, data),
-                                  textprops=dict(color="w"))
-
-ax.legend(wedges, ingredients,
-          title="Ingredients",
-          loc="center left",
-          bbox_to_anchor=(1, 0, 0.5, 1))
-
-
-
-plt.pyplot.setp(autotexts, size=8, weight="bold")
-
-ax.set_title("Matplotlib bakery: A pie")
-
-# autotexts[0]=Text(0.1,0.3,'37.5%\n(375 gsss)')
-
-plt.pyplot.show()
-
-print(autotexts)
-
-
-
-
-fig, ax = plt.pyplot.subplots(figsize=(6, 3), subplot_kw=dict(aspect="equal"))
-
-recipe = ["225 g flour",
-          "90 g sugar",
-          "1 egg",
-          "60 g butter",
-          "100 ml milk",
-          "1/2 package of yeast"]
-
-data = [225, 90, 50, 60, 100, 5]
-
-wedges, texts = ax.pie(data, wedgeprops=dict(width=0.5), startangle=-40)
-
-bbox_props = dict(boxstyle="square,pad=0.3", fc="w", ec="k", lw=0.72)
-kw = dict(arrowprops=dict(arrowstyle="-"),
-          bbox=bbox_props, zorder=0, va="center")
-
-for i, p in enumerate(wedges):
-    ang = (p.theta2 - p.theta1)/2. + p.theta1
-    y = np.sin(np.deg2rad(ang))
-    x = np.cos(np.deg2rad(ang))
-    horizontalalignment = {-1: "right", 1: "left"}[int(np.sign(x))]
-    connectionstyle = "angle,angleA=0,angleB={}".format(ang)
-    kw["arrowprops"].update({"connectionstyle": connectionstyle})
-    ax.annotate(recipe[i], xy=(x, y), xytext=(1.35*np.sign(x), 1.4*y),
-                horizontalalignment=horizontalalignment, **kw)
-
-ax.set_title("Matplotlib bakery: A donut")
-
-plt.pyplot.show()
+# fig, ax = plt.pyplot.subplots(figsize=(6, 3), subplot_kw=dict(aspect="equal"))
+#
+# recipe = ["375 g flour",
+#           "75 g sugar",
+#           "250 g butter",
+#           "300 g berries"]
+#
+# data = [float(x.split()[0]) for x in recipe]
+# ingredients = [x.split()[-1] for x in recipe]
+#
+#
+# def func(pct, allvals):
+#     absolute = int(pct/100.*np.sum(allvals))
+#     return "{:.1f}%\n({:d} g)".format(pct, absolute)
+#
+#
+# wedges, texts, autotexts = ax.pie(data, autopct=lambda pct: func(pct, data),
+#                                   textprops=dict(color="w"))
+#
+# ax.legend(wedges, ingredients,
+#           title="Ingredients",
+#           loc="center left",
+#           bbox_to_anchor=(1, 0, 0.5, 1))
+#
+#
+#
+# plt.pyplot.setp(autotexts, size=8, weight="bold")
+#
+# ax.set_title("Matplotlib bakery: A pie")
+#
+# # autotexts[0]=Text(0.1,0.3,'37.5%\n(375 gsss)')
+#
+# plt.pyplot.show()
+#
+# print(autotexts)
+#
+#
+#
+#
+# fig, ax = plt.pyplot.subplots(figsize=(6, 3), subplot_kw=dict(aspect="equal"))
+#
+# recipe = ["225 g flour",
+#           "90 g sugar",
+#           "1 egg",
+#           "60 g butter",
+#           "100 ml milk",
+#           "1/2 package of yeast"]
+#
+# data = [225, 90, 50, 60, 100, 5]
+#
+# wedges, texts = ax.pie(data, wedgeprops=dict(width=0.5), startangle=-40)
+#
+# bbox_props = dict(boxstyle="square,pad=0.3", fc="w", ec="k", lw=0.72)
+# kw = dict(arrowprops=dict(arrowstyle="-"),
+#           bbox=bbox_props, zorder=0, va="center")
+#
+# for i, p in enumerate(wedges):
+#     ang = (p.theta2 - p.theta1)/2. + p.theta1
+#     y = np.sin(np.deg2rad(ang))
+#     x = np.cos(np.deg2rad(ang))
+#     horizontalalignment = {-1: "right", 1: "left"}[int(np.sign(x))]
+#     connectionstyle = "angle,angleA=0,angleB={}".format(ang)
+#     kw["arrowprops"].update({"connectionstyle": connectionstyle})
+#     ax.annotate(recipe[i], xy=(x, y), xytext=(1.35*np.sign(x), 1.4*y),
+#                 horizontalalignment=horizontalalignment, **kw)
+#
+# ax.set_title("Matplotlib bakery: A donut")
+#
+# plt.pyplot.show()
